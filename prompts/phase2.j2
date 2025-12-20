@@ -1,0 +1,87 @@
+{
+    "task": "Analyze the provided menu image and extract the item names, descriptions, variations, and prices under the specified categories or subcategory.",
+    "context": [
+        "The restaurant name is: {{ restaurant_name }}",
+        "The page number is: {{ page_number }}",
+        "Extract only for the provided categories or subcategories.",
+        "Do not add or rename any categories or subcategories."
+    ],
+    "instructions": [
+        "Perform a detailed and structured analysis of the menu image.",
+        "Extract the item names and item descriptions for ONLY the categories or subcategories provided below.",
+        "Use the following category with or without subcategory list exactly as given: {{ categories }}",
+        "Identify and subcategories the items from the menu image under the exact matching subcategories.",
+        "If a category has no subcategories, extract items directly under that category.",
+        "Extract the item name EXACTLY as written in the menu image (preserve casing, punctuation, spacing).",
+        "Extract the item description EXACTLY as written. If the description does not exist, return null.",
+        "Extract category-level descriptions exactly as written. If not available, return null.",
+        "Extract subcategory-level descriptions exactly as written. If not available, return null.",
+        "For each item, identify any variations accounting for their size and quantity and extract their names and prices.",
+        "The variation name should reflect size or quantity as shown in the menu image.",
+        "Mention the size or quantity in the variation name as written in the menu image.",
+        "if there is no variation, focus on extracting the base item price.",
+        "The size can be in the item name, in case there is no variation. Extract it accordingly.",
+        "Keep the default currency as USD unless specified otherwise in the menu image.",
+        "If an item has a base price (a default price without variations), extract that as well and don't duplicate it in variations.",
+        "The response MUST follow the output schema exactly.",
+        "Include a 'note' explaining extraction quality, missing categories, or inconsistencies.",
+        "Provide ONLY the JSON output. No explanation or additional text outside JSON."
+    ],
+    "output_format":
+            {
+                "name_raw": "string" (name of the category),
+                "category_items": [
+                    {
+                        "items": [
+                            "name_raw": "string",
+                            "description_raw": "string or null",
+                            "variations": [
+                                "name_raw": "string",
+                                "price": {
+                                    "amount": "number",
+                                    "currency": "string"
+                                },
+                                "size": "string or null"
+                            ],
+                            "base_price": {
+                                "amount": "number",
+                                "currency": "string"
+                            } or null,
+                            "size": "string or null"
+                        ],
+                        "description_raw": "string" or null
+                    }
+                ],
+                "subcategory_items": [
+                    {
+                        "name_raw": "string",
+                        "items": [
+                            "name_raw": "string",
+                            "description_raw": "string or null",
+                            "variations": [
+                                "name_raw": "string",
+                                "price": {
+                                    "amount": "number",
+                                    "currency": "string"
+                                },
+                                "size": "string or null"
+                            ],
+                            "base_price": {
+                                "amount": "number",
+                                "currency": "string"
+                            } or null,
+                            "size": "string or null"
+                        ],
+                        "description_raw": "string" or null
+                    }
+                ],
+                "note": "string"
+            }
+                    
+    "additional_constraints": [
+        "The response MUST be strictly valid JSON according to the provided schema.",
+        "DO NOT include categories or subcategories not listed.",
+        "DO NOT change the output keys or their nesting.",
+        "DO NOT hallucinate item descriptions—return null if not present."
+    ]
+  }
