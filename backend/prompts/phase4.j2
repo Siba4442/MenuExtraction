@@ -1,0 +1,84 @@
+{
+    "task": "Analyze the provided menu image and extract detailed structured menu data for the specified category.",
+
+    "context": [
+        "The page number is: {{ page_number }} of the menu.",
+        "The restaurant name is : {{ restaurant_name }}",
+        "The category block (category + subcategories + items) is provided below:",
+        {{ category }},
+        "The category base ingredient (category + subcategories) is provided below:",
+        {{ category_base }}
+    ]
+
+    "instructions": [
+    "You are given a single category and its items extracted from a previous OCR/detection stage.",
+        "Your task is to re-read the image and precisely extract structured information ONLY for this items in the category or subcategories.",
+        "DO NOT create new categories, subcategories, or items. DO NOT rename the category, subcategories, or items. Use the category, subcategories, and items name EXACTLY as provided.",
+
+        "For the given items, extract the following:",
+        "- Addons Ingredient: Which Ingredient are use in or can be add in the item. If not specified, return null.",
+        "- Addons Ingredient Price: Price associated with the Addons ingredient. If not specified, return null.",
+        "- Addons ingredient Price with variations: If there are variations for the whole category, extract them with their prices. If not specified, return null.",
+        "- This data can be in the description of the items.",
+        "- The description of the items is mention if avaliable in the menu, in the context block of the prompt."
+        "- Still make sure from the provided image if there is any other description for the items.",
+        "- There are default options for some items, extract them as Addons ingredients and put default as true.",
+        "- Read the menu image carefully to find all default Addons ingredients that could be include in the description of the items.",
+        "- If the items has description the semantically analyze it to find the default Addons ingredients, Addons ingredients and their prices.",
+        "- Don't leave out the default options if there are any.",
+        "- As the cost of default items is included in the items price keep the Addons ingredient price as null for default Addons ingredient.",
+        "- When extracting price, for the Addons ingredient which is not default mention the exact price as shown in the menu image not the absolute price.",
+        "- Apply the same logic if there is subcategories under the main category.",
+        "- if there is no subcategories keep the subcategories Addons as empty list.",
+        "- The base ingredient which applys to all items in the category or subcategory is mentioned in the context block of the prompt, so don't include those as the items addon (default or not).",
+        "- Completely foucus on extracting addons ingredients for the items only, which apply at individual item-level.",
+        "- carefully read the description of the item to find the item-level addons ingredients and their prices.",
+        "- Sementically analyze the description to find the item-level addons ingredients and their prices.",
+
+        "Additionally:",
+        "- Extract item-level addons IF they apply to that item only.",
+
+        "VERY IMPORTANT RULES:",
+        "- DO NOT hallucinate any data (variations, prices, addons, or descriptions).",
+        "- If a field is not shown in the image, return null for that field.",
+        "- Output MUST strictly follow the provided schema.",
+        "- Return ONLY the JSON output. No explanation, no commentary, no markdown."
+        "- Don't include the base ingredients and items name in addon or in sub categories which are already extracted in the previous phase as part of the items addons."
+        "- Analyze the context block carefully to avoid duplicating any information already extracted in the previous phase."
+    
+    ],
+
+    "output_format": {
+        "name_raw" : "string" (name of the category),
+        "subcategory_items": [
+            {
+                "name_raw": "string" (name of the subcategory),
+                "items_addons": [
+                    {
+                        "name_raw": "string" (name of the addon ingredient),
+                        "price": "float or null" (price of the addon ingredient),
+                        "default": "boolean" (true if the addon is default, false otherwise)
+                    }
+                ]
+            }
+        ] or [] (if there is no subcategories),
+        "items_addons": [
+            {
+                "name_raw": "string" (name of the addon ingredient),
+                "price": "float or null" (price of the addon ingredient),
+                "default": "boolean" (true if the addon is default, false otherwise)
+            }
+        ] (if there is no subcategories)
+
+    },
+
+    "additional_constraints": [
+        "The output MUST be valid JSON.",
+        "DO NOT include fields not present in the schema.",
+        "Prices must be numeric floats.",
+        "Return null for all missing or unavailable data.",
+        "DO NOT infer or guess information."
+    ]
+}
+
+    

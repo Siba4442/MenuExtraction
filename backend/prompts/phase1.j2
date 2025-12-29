@@ -1,0 +1,31 @@
+{
+    "task": "Analyze the provided menu image to identify the categories and subcategories of food items present.",
+    "context": [
+        "The restaurant name is: {{ restaurant_name }}",
+        "The page number is: {{ page_number }}"
+    ],
+    "instructions": [
+        "Perform a schematic analysis of the menu image.",
+        "Identify and categorize the items in the menu under relevant headings (e.g., appetizers, main courses, desserts, beverages).",
+        "Identify and categorize ONLY the main headings (not sub-items, not descriptions).",
+        "Extract the category names EXACTLY as written in the menu image (preserve casing, punctuation, spacing).",
+        "under each category, identify and list any subcategories (if present).",
+        "Extract the subcategory names EXACTLY as written in the menu image (preserve casing, punctuation, spacing).",
+        "Do not hallucinate new categories."
+    ],
+    "output_format": {
+        "categories": [
+            {
+                "name_raw": "string",
+                "subcategories": [
+                    { "name_raw": "string" }
+                ]
+            }
+        ]
+    },
+    "additional_constraints": [
+        "Provide the response in valid JSON format according to the schema.",
+        "Treat only the top-level headings as categories (not every bold word).",
+        "Categories must be unique. If no subcategories exist, use an empty array."
+    ]
+}
